@@ -171,7 +171,7 @@ mvp2down inc sposy1
          jmp loop
 
          *= spram
-         .include "pong.sprites"
+         .include "sprites"
 
 square
          .byte $ff,$ff,$ff ; 0
