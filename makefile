@@ -16,8 +16,8 @@ INPUT_S00    	:= $(wildcard $(INPUTDIR)/*.S00)
 INPUT_PRG       := $(patsubst $(INPUTDIR)/%.P00,$(OUTPUTDIR)/%.P00.C64,$(INPUT_P00))
 INPUT_SEQ 	    := $(patsubst $(INPUTDIR)/%.S00,$(OUTPUTDIR)/%.S00.C64,$(INPUT_S00))
 
-OUTPUT_PRG      := $(patsubst $(OUTPUTDIR)/%.P00.C64,$(OUTPUTDIR)/%.prg,$(INPUT_PRG))
-OUTPUT_SEQ 	    := $(patsubst $(OUTPUTDIR)/%.S00.C64,$(OUTPUTDIR)/%.seq,$(INPUT_SEQ))
+OUTPUT_PRG      := $(patsubst $(OUTPUTDIR)/%.P00.C64,$(OUTPUTDIR)/%,$(INPUT_PRG))
+OUTPUT_SEQ 	    := $(patsubst $(OUTPUTDIR)/%.S00.C64,$(OUTPUTDIR)/%,$(INPUT_SEQ))
 
 # Default step
 default: $(OUTPUT_PRG) $(OUTPUT_SEQ)
@@ -28,9 +28,8 @@ clean:
 
 # List files
 list: 
-	@echo "Input file(s)" $(INPUT_FILES)
-	@echo "PRG file(s)" $(INPUT_PRG)
-	@echo "SEQ file(s)" $(INPUT_SEQ)
+	@echo "PRG file(s) :" $(INPUT_P00)
+	@echo "SEQ file(s) :" $(INPUT_S00)
 
 # P00 to C64 conversion
 $(OUTPUTDIR)/%.C64: $(INPUTDIR)/%
@@ -38,11 +37,11 @@ $(OUTPUTDIR)/%.C64: $(INPUTDIR)/%
 	dd skip=$(P00_HEADER) bs=1 if=$^ of=$@
 
 # PRG files
-$(OUTPUTDIR)/%.prg: $(OUTPUTDIR)/%.P00.C64
+$(OUTPUTDIR)/%: $(OUTPUTDIR)/%.P00.C64
 	mkdir -p $(@D)
 	$(TMPVIEW) -i $^ -o $@
 
 # SEQ files
-$(OUTPUTDIR)/%.seq: $(OUTPUTDIR)/%.S00.C64
+$(OUTPUTDIR)/%: $(OUTPUTDIR)/%.S00.C64
 	mkdir -p $(@D)
 	cp -f $^ $@ 
